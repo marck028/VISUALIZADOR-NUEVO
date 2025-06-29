@@ -1,38 +1,56 @@
 {% extends "base.html" %}
 
-{% block title %}Acerca de - Dashboard Restaurante{% endblock %}
+{% block title %}Acerca de - Menta Dashboard{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <div class="card">
             <div class="card-body p-5">
-                <h2 class="card-title text-center mb-4">Acerca del Dashboard</h2>
+                <div class="text-center mb-4">
+                    <img src="https://via.placeholder.com/100/88c9a1/ffffff?text=MT" 
+                         class="rounded-circle mb-3" 
+                         style="width: 80px; height: 80px; object-fit: cover; background-color: var(--menta-primary);">
+                    <h2 class="card-title" style="color: var(--menta-dark);">Menta Analytics</h2>
+                    <p class="text-muted">Sistema de análisis para el restaurante Menta</p>
+                </div>
                 
                 <div class="row">
                     <div class="col-md-6">
-                        <h4><i class="fas fa-chart-line text-primary"></i> Funcionalidades</h4>
-                        <ul>
-                            <li>Visualización interactiva de ventas</li>
-                            <li>Análisis por categorías de productos</li>
-                            <li>Tendencia de ventas mensuales</li>
-                            <li>Comparación entre días de la semana</li>
-                        </ul>
+                        <div class="card mb-3 border-0" style="background-color: var(--menta-light);">
+                            <div class="card-body">
+                                <h4 class="card-title" style="color: var(--menta-accent);">
+                                    <i class="fas fa-chart-line me-2"></i> Funcionalidades
+                                </h4>
+                                <ul class="fa-ul">
+                                    <li><span class="fa-li"><i class="fas fa-check" style="color: var(--menta-primary);"></i></span>Visualización interactiva de ventas</li>
+                                    <li><span class="fa-li"><i class="fas fa-check" style="color: var(--menta-primary);"></i></span>Análisis por categorías de productos</li>
+                                    <li><span class="fa-li"><i class="fas fa-check" style="color: var(--menta-primary);"></i></span>Tendencia de ventas mensuales</li>
+                                    <li><span class="fa-li"><i class="fas fa-check" style="color: var(--menta-primary);"></i></span>Comparación entre días de la semana</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <h4><i class="fas fa-cogs text-primary"></i> Tecnologías</h4>
-                        <ul>
-                            <li>Backend: Python con Flask</li>
-                            <li>Frontend: Bootstrap 5</li>
-                            <li>Visualización: Plotly.js</li>
-                            <li>Procesamiento: Pandas</li>
-                        </ul>
+                        <div class="card mb-3 border-0" style="background-color: var(--menta-light);">
+                            <div class="card-body">
+                                <h4 class="card-title" style="color: var(--menta-accent);">
+                                    <i class="fas fa-code me-2"></i> Tecnologías
+                                </h4>
+                                <ul class="fa-ul">
+                                    <li><span class="fa-li"><i class="fab fa-python" style="color: var(--menta-primary);"></i></span>Python con Flask</li>
+                                    <li><span class="fa-li"><i class="fab fa-js" style="color: var(--menta-primary);"></i></span>Bootstrap 5</li>
+                                    <li><span class="fa-li"><i class="fas fa-chart-bar" style="color: var(--menta-primary);"></i></span>Plotly.js</li>
+                                    <li><span class="fa-li"><i class="fas fa-database" style="color: var(--menta-primary);"></i></span>Pandas</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="text-center mt-4">
                     <a href="/" class="btn btn-primary">
-                        <i class="fas fa-arrow-left"></i> Volver al inicio
+                        <i class="fas fa-arrow-left me-2"></i> Volver al dashboard
                     </a>
                 </div>
             </div>

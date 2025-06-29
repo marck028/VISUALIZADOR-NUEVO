@@ -6,91 +6,187 @@
     <title>{% block title %}Dashboard Restaurante{% endblock %}</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.26.0/plotly.min.js"></script>
     <style>
+        :root {
+            --menta-primary: #88c9a1;
+            --menta-secondary: #b8dfc7;
+            --menta-dark: #2a5c40;
+            --menta-light: #e8f4ed;
+            --menta-accent: #5a9c76;
+        }
+        
         body {
-            background: linear-gradient(135deg,rgb(36, 255, 189) 0%,rgb(13, 189, 45) 100%);
+            background: linear-gradient(135deg, var(--menta-light) 0%, var(--menta-secondary) 100%);
             min-height: 100vh;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Open Sans', sans-serif;
+            color: #333;
         }
+        
         .navbar {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.98) !important;
+            border-bottom: 1px solid var(--menta-secondary);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
         }
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        
+        .navbar-brand {
+            color: var(--menta-dark) !important;
+            font-weight: 600;
         }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-        }
-        .btn-primary {
-            background: linear-gradient(45deg,rgb(69, 255, 162),rgb(41, 156, 12));
-            border: none;
-            border-radius: 25px;
-            padding: 10px 25px;
+        
+        .nav-link {
+            color: var(--menta-dark) !important;
             transition: all 0.3s ease;
         }
+        
+        .nav-link:hover {
+            color: var(--menta-accent) !important;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.98);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .card-title {
+            color: var(--menta-dark);
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--menta-primary), var(--menta-accent));
+            border: none;
+            border-radius: 8px;
+            padding: 10px 25px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(136, 201, 161, 0.4);
+            background: linear-gradient(45deg, var(--menta-accent), var(--menta-primary));
         }
+        
         .upload-area {
-            border: 2px dashed #667eea;
-            border-radius: 15px;
+            border: 2px dashed var(--menta-primary);
+            border-radius: 12px;
             padding: 40px;
             text-align: center;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.7);
             transition: all 0.3s ease;
         }
+        
         .upload-area:hover {
-            border-color: #764ba2;
-            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--menta-accent);
+            background: rgba(255, 255, 255, 0.9);
         }
+        
         .kpi-card {
-            background: linear-gradient(135deg,rgb(13, 189, 45) 0%,rgb(13, 189, 45) 100%);
+            background: linear-gradient(135deg, var(--menta-primary) 0%, var(--menta-accent) 100%);
             color: white;
-            border-radius: 15px;
+            border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
             text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
         }
+        
+        .kpi-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        
+        .kpi-card h6 {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .kpi-card h3 {
+            font-weight: 600;
+            margin: 0;
+        }
+        
         .filter-section {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
             padding: 20px;
             margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
+        
         .chart-container {
             background: white;
-            border-radius: 15px;
+            border-radius: 12px;
             padding: 20px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.03);
         }
+        
         .loading {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 30px;
         }
+        
         .spinner-border {
-            color: #667eea;
+            color: var(--menta-primary);
+            width: 3rem;
+            height: 3rem;
         }
+        
         .filter-checkbox {
             margin: 5px 0;
         }
+        
         .filter-group {
             max-height: 200px;
             overflow-y: auto;
-            border: 1px solid #dee2e6;
+            border: 1px solid rgba(0,0,0,0.05);
             border-radius: 8px;
             padding: 10px;
+            background: rgba(255,255,255,0.7);
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--menta-primary);
+            border-color: var(--menta-primary);
+        }
+        
+        .alert-info {
+            background-color: var(--menta-light);
+            border-color: var(--menta-secondary);
+            color: var(--menta-dark);
+        }
+        
+        /* Mejoras para los gráficos */
+        .js-plotly-plot .plotly .modebar {
+            background: rgba(255,255,255,0.8) !important;
+        }
+        
+        /* Efecto sutil para los elementos interactivos */
+        .btn-outline-primary {
+            color: var(--menta-primary);
+            border-color: var(--menta-primary);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--menta-primary);
+            color: white;
         }
     </style>
 </head>

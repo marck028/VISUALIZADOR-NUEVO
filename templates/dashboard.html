@@ -1,22 +1,25 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard - Análisis de Ventas{% endblock %}
+{% block title %}Dashboard - Menta Analytics{% endblock %}
 
 {% block content %}
 <div class="row">
     <!-- Filtros -->
     <div class="col-lg-3">
-        <div class="filter-section sticky-top">
-            <h5><i class="fas fa-filter"></i> Filtros</h5>
+        <div class="filter-section sticky-top" style="top: 20px;">
+            <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-sliders-h me-2" style="color: var(--menta-accent);"></i>
+                <h5 class="mb-0" style="color: var(--menta-dark);">Filtros</h5>
+            </div>
             
             <!-- Categorías -->
             <div class="mb-3">
-                <label class="form-label fw-bold">Categorías:</label>
+                <label class="form-label fw-bold" style="color: var(--menta-dark);">Categorías:</label>
                 <div class="filter-group">
                     {% for categoria in categorias %}
                     <div class="form-check filter-checkbox">
                         <input class="form-check-input category-filter" type="checkbox" 
-                               value="{{ categoria }}" id="cat_{{ loop.index }}">
+                               value="{{ categoria }}" id="cat_{{ loop.index }}" checked>
                         <label class="form-check-label" for="cat_{{ loop.index }}">
                             {{ categoria }}
                         </label>
@@ -24,13 +27,13 @@
                     {% endfor %}
                 </div>
                 <button class="btn btn-sm btn-outline-primary mt-2" onclick="selectAllCategories()">
-                    Seleccionar Todas
+                    <i class="fas fa-check-circle"></i> Seleccionar Todas
                 </button>
             </div>
 
             <!-- Productos -->
             <div class="mb-3">
-                <label class="form-label fw-bold">Productos:</label>
+                <label class="form-label fw-bold" style="color: var(--menta-dark);">Productos:</label>
                 <div class="filter-group" id="productosContainer">
                     <!-- Se llenará dinámicamente -->
                 </div>
@@ -38,12 +41,12 @@
 
             <!-- Años -->
             <div class="mb-3">
-                <label class="form-label fw-bold">Años:</label>
+                <label class="form-label fw-bold" style="color: var(--menta-dark);">Años:</label>
                 <div class="filter-group">
                     {% for year in years %}
                     <div class="form-check filter-checkbox">
                         <input class="form-check-input year-filter" type="checkbox" 
-                               value="{{ year }}" id="year_{{ year }}">
+                               value="{{ year }}" id="year_{{ year }}" checked>
                         <label class="form-check-label" for="year_{{ year }}">
                             {{ year }}
                         </label>
@@ -54,14 +57,14 @@
 
             <!-- Meses -->
             <div class="mb-3">
-                <label class="form-label fw-bold">Meses:</label>
+                <label class="form-label fw-bold" style="color: var(--menta-dark);">Meses:</label>
                 <div class="filter-group">
                     {% set meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
                                    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'] %}
                     {% for i in range(1, 13) %}
                     <div class="form-check filter-checkbox">
                         <input class="form-check-input month-filter" type="checkbox" 
-                               value="{{ i }}" id="month_{{ i }}">
+                               value="{{ i }}" id="month_{{ i }}" checked>
                         <label class="form-check-label" for="month_{{ i }}">
                             {{ meses[i-1] }}
                         </label>
@@ -72,13 +75,13 @@
 
             <!-- Días -->
             <div class="mb-3">
-                <label class="form-label fw-bold">Días de la Semana:</label>
+                <label class="form-label fw-bold" style="color: var(--menta-dark);">Días:</label>
                 <div class="filter-group">
                     {% set dias_nombres = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'] %}
                     {% for i in range(1, 8) %}
                     <div class="form-check filter-checkbox">
                         <input class="form-check-input day-filter" type="checkbox" 
-                               value="{{ i }}" id="day_{{ i }}">
+                               value="{{ i }}" id="day_{{ i }}" checked>
                         <label class="form-check-label" for="day_{{ i }}">
                             {{ dias_nombres[i-1] }}
                         </label>
@@ -87,49 +90,62 @@
                 </div>
             </div>
 
-            <button class="btn btn-primary w-100" onclick="updateCharts()">
-                <i class="fas fa-sync-alt"></i> Actualizar Gráficos
+            <button class="btn btn-primary w-100 mt-2" onclick="updateCharts()">
+                <i class="fas fa-sync-alt me-2"></i> Aplicar Filtros
             </button>
         </div>
     </div>
 
     <!-- Contenido Principal -->
     <div class="col-lg-9">
+        <!-- Encabezado -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 style="color: var(--menta-dark);">
+                <i class="fas fa-chart-pie me-2" style="color: var(--menta-primary);"></i>
+                Análisis de Ventas
+            </h2>
+            <div>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-file-upload me-1"></i> Nuevo Reporte
+                </a>
+            </div>
+        </div>
+        
         <!-- KPIs -->
         <div class="row mb-4" id="kpisContainer">
-            <div class="col-md-3">
+            <div class="col-md-4 col-sm-6">
                 <div class="kpi-card">
-                    <h6>Total Ventas</h6>
+                    <h6><i class="fas fa-money-bill-wave me-2"></i>Total Ventas</h6>
                     <h3 id="totalVentas">-</h3>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4 col-sm-6">
                 <div class="kpi-card">
-                    <h6>Cantidad Total</h6>
+                    <h6><i class="fas fa-boxes me-2"></i>Cantidad Total</h6>
                     <h3 id="totalCantidad">-</h3>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4 col-sm-6">
                 <div class="kpi-card">
-                    <h6>Ticket Promedio</h6>
+                    <h6><i class="fas fa-receipt me-2"></i>Ticket Promedio</h6>
                     <h3 id="promedioTicket">-</h3>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4 col-sm-6">
                 <div class="kpi-card">
-                    <h6>Productos Únicos</h6>
+                    <h6><i class="fas fa-barcode me-2"></i>Productos Únicos</h6>
                     <h3 id="productosUnicos">-</h3>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4 col-sm-6">
                 <div class="kpi-card">
-                    <h6>Promedio por Producto</h6>
+                    <h6><i class="fas fa-cube me-2"></i>Promedio por Producto</h6>
                     <h3 id="promedioVentaProducto">-</h3>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4 col-sm-6">
                 <div class="kpi-card">
-                    <h6>Días con Ventas</h6>
+                    <h6><i class="fas fa-calendar-day me-2"></i>Días con Ventas</h6>
                     <h3 id="diasConVentas">-</h3>
                 </div>
             </div>
