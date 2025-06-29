@@ -251,12 +251,16 @@ def generate_graphs(df):
     total_cantidad = df['CANTIDAD'].sum()
     promedio_ticket = total_ventas / len(df) if len(df) > 0 else 0
     productos_unicos = df['PRODUCTO'].nunique()
+    promedio_venta_por_producto = total_ventas / total_cantidad if total_cantidad > 0 else 0
+    dias_con_ventas = df['FECHA'].nunique()
     
     graphs['kpis'] = {
         'total_ventas': f"Bs. {total_ventas:,.2f}",
         'total_cantidad': f"{total_cantidad:,.0f}",
         'promedio_ticket': f"Bs. {promedio_ticket:.2f}",
-        'productos_unicos': f"{productos_unicos}"
+        'productos_unicos': f"{productos_unicos}",
+        'promedio_venta_por_producto': f"Bs. {promedio_venta_por_producto:.2f}",
+        'dias_con_ventas': f"{dias_con_ventas}"
     }
 
     try:
@@ -325,6 +329,15 @@ def generate_graphs(df):
                         title='Relación Cantidad vs Valor por Categoría',
                         labels={'CANTIDAD': 'Cantidad Total', 'VALOR': 'Valor Total (Bs.)'})
         graphs['cantidad_vs_valor'] = json.dumps(fig6, cls=PlotlyJSONEncoder)
+        
+        # 7. Top 10 productos menos vendidos
+        bottom_productos = df.groupby('PRODUCTO')['VALOR'].sum().nsmallest(10).reset_index()
+        fig7 = px.bar(bottom_productos, x='VALOR', y='PRODUCTO', orientation='h',
+                    title='Top 10 Productos Menos Vendidos',
+                    labels={'VALOR': 'Ventas (Bs.)', 'PRODUCTO': 'Producto'},
+                    color_discrete_sequence=['#FF6B6B'])  # Color rojo para destacar
+        fig7.update_layout(yaxis={'categoryorder': 'total ascending'})
+        graphs['bottom_productos'] = json.dumps(fig7, cls=PlotlyJSONEncoder)
     
     except Exception as e:
         app.logger.error(f"Error generando gráficos: {str(e)}")

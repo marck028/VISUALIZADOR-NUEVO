@@ -121,6 +121,18 @@
                     <h3 id="productosUnicos">-</h3>
                 </div>
             </div>
+            <div class="col-md-3">
+                <div class="kpi-card">
+                    <h6>Promedio por Producto</h6>
+                    <h3 id="promedioVentaProducto">-</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card">
+                    <h6>Días con Ventas</h6>
+                    <h3 id="diasConVentas">-</h3>
+                </div>
+            </div>
         </div>
 
         <!-- Gráficos -->
@@ -169,6 +181,11 @@
             <div class="col-12 mb-4">
                 <div class="chart-container">
                     <div id="heatmapVentas"></div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="chart-container">
+                    <div id="bottomProductos"></div>
                 </div>
             </div>
         </div>
@@ -298,6 +315,8 @@ function updateCharts() {
             updateKPI('totalCantidad', data.kpis?.total_cantidad);
             updateKPI('promedioTicket', data.kpis?.promedio_ticket);
             updateKPI('productosUnicos', data.kpis?.productos_unicos);
+            updateKPI('promedioVentaProducto', data.kpis?.promedio_venta_por_producto);
+            updateKPI('diasConVentas', data.kpis?.dias_con_ventas);
             
             // Función para actualizar gráficos
             const updatePlot = (elementId, graphData) => {
@@ -318,6 +337,7 @@ function updateCharts() {
             updatePlot('ventasDiaSemana', data.ventas_dia_semana);
             updatePlot('cantidadVsValor', data.cantidad_vs_valor);
             updatePlot('heatmapVentas', data.heatmap_ventas);
+            updatePlot('bottomProductos', data.bottom_productos);
             
             loadingElement.style.display = 'none';
             containerElement.style.display = 'block';
