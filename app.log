@@ -1,0 +1,9 @@
+Error en /api/data: 'Figure' object has no attribute 'update_xaxis'
+Traceback (most recent call last):
+  File "C:\Users\Marco\Documents\UNIVERSIDAD\MENTA 2025\VISUALIZADOR-NUEVO\app.py", line 232, in get_data
+    graphs = generate_graphs(df_filtered)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Marco\Documents\UNIVERSIDAD\MENTA 2025\VISUALIZADOR-NUEVO\app.py", line 295, in generate_graphs
+    fig3.update_xaxis(tickangle=45)
+    ^^^^^^^^^^^^^^^^^
+AttributeError: 'Figure' object has no attribute 'update_xaxis'

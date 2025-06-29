@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Acerca de - Dashboard Restaurante{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body p-5">
+                <h2 class="card-title text-center mb-4">Acerca del Dashboard</h2>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4><i class="fas fa-chart-line text-primary"></i> Funcionalidades</h4>
+                        <ul>
+                            <li>Visualización interactiva de ventas</li>
+                            <li>Análisis por categorías de productos</li>
+                            <li>Tendencia de ventas mensuales</li>
+                            <li>Comparación entre días de la semana</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h4><i class="fas fa-cogs text-primary"></i> Tecnologías</h4>
+                        <ul>
+                            <li>Backend: Python con Flask</li>
+                            <li>Frontend: Bootstrap 5</li>
+                            <li>Visualización: Plotly.js</li>
+                            <li>Procesamiento: Pandas</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="/" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i> Volver al inicio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

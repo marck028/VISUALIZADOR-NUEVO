@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Análisis de Ventas{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Filtros -->
+    <div class="col-lg-3">
+        <div class="filter-section sticky-top">
+            <h5><i class="fas fa-filter"></i> Filtros</h5>
+            
+            <!-- Categorías -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Categorías:</label>
+                <div class="filter-group">
+                    {% for categoria in categorias %}
+                    <div class="form-check filter-checkbox">
+                        <input class="form-check-input category-filter" type="checkbox" 
+                               value="{{ categoria }}" id="cat_{{ loop.index }}">
+                        <label class="form-check-label" for="cat_{{ loop.index }}">
+                            {{ categoria }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="btn btn-sm btn-outline-primary mt-2" onclick="selectAllCategories()">
+                    Seleccionar Todas
+                </button>
+            </div>
+
+            <!-- Productos -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Productos:</label>
+                <div class="filter-group" id="productosContainer">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Años -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Años:</label>
+                <div class="filter-group">
+                    {% for year in years %}
+                    <div class="form-check filter-checkbox">
+                        <input class="form-check-input year-filter" type="checkbox" 
+                               value="{{ year }}" id="year_{{ year }}">
+                        <label class="form-check-label" for="year_{{ year }}">
+                            {{ year }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Meses -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Meses:</label>
+                <div class="filter-group">
+                    {% set meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                                   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'] %}
+                    {% for i in range(1, 13) %}
+                    <div class="form-check filter-checkbox">
+                        <input class="form-check-input month-filter" type="checkbox" 
+                               value="{{ i }}" id="month_{{ i }}">
+                        <label class="form-check-label" for="month_{{ i }}">
+                            {{ meses[i-1] }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Días -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Días de la Semana:</label>
+                <div class="filter-group">
+                    {% set dias_nombres = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'] %}
+                    {% for i in range(1, 8) %}
+                    <div class="form-check filter-checkbox">
+                        <input class="form-check-input day-filter" type="checkbox" 
+                               value="{{ i }}" id="day_{{ i }}">
+                        <label class="form-check-label" for="day_{{ i }}">
+                            {{ dias_nombres[i-1] }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button class="btn btn-primary w-100" onclick="updateCharts()">
+                <i class="fas fa-sync-alt"></i> Actualizar Gráficos
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="col-lg-9">
+        <!-- KPIs -->
+        <div class="row mb-4" id="kpisContainer">
+            <div class="col-md-3">
+                <div class="kpi-card">
+                    <h6>Total Ventas</h6>
+                    <h3 id="totalVentas">-</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card">
+                    <h6>Cantidad Total</h6>
+                    <h3 id="totalCantidad">-</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card">
+                    <h6>Ticket Promedio</h6>
+                    <h3 id="promedioTicket">-</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card">
+                    <h6>Productos Únicos</h6>
+                    <h3 id="productosUnicos">-</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="loading text-center" id="chartsLoading">
+            <div class="spinner-border" role="status"></div>
+            <p class="mt-2">Cargando gráficos...</p>
+        </div>
+
+        <div class="row" id="chartsContainer">
+            <!-- Ventas por Categoría -->
+            <div class="col-lg-6 mb-4">
+                <div class="chart-container">
+                    <div id="ventasCategoria"></div>
+                </div>
+            </div>
+
+            <!-- Top Productos -->
+            <div class="col-lg-6 mb-4">
+                <div class="chart-container">
+                    <div id="topProductos"></div>
+                </div>
+            </div>
+
+            <!-- Evolución Mensual -->
+            <div class="col-12 mb-4">
+                <div class="chart-container">
+                    <div id="ventasMensuales"></div>
+                </div>
+            </div>
+
+            <!-- Ventas por Día -->
+            <div class="col-lg-6 mb-4">
+                <div class="chart-container">
+                    <div id="ventasDiaSemana"></div>
+                </div>
+            </div>
+
+            <!-- Cantidad vs Valor -->
+            <div class="col-lg-6 mb-4">
+                <div class="chart-container">
+                    <div id="cantidadVsValor"></div>
+                </div>
+            </div>
+
+            <!-- Heatmap -->
+            <div class="col-12 mb-4">
+                <div class="chart-container">
+                    <div id="heatmapVentas"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Productos por categoría (desde Flask)
+const productosPorCategoria = {{ productos_por_categoria|tojson }};
+
+// Inicializar dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    // Cargar productos iniciales
+    updateProductsList();
+    
+    // Event listeners para filtros de categoría
+    document.querySelectorAll('.category-filter').forEach(checkbox => {
+        checkbox.addEventListener('change', updateProductsList);
+    });
+    
+    // Cargar datos iniciales
+    updateCharts();
+});
+
+function selectAllCategories() {
+    const checkboxes = document.querySelectorAll('.category-filter');
+    const allSelected = Array.from(checkboxes).every(cb => cb.checked);
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = !allSelected;
+    });
+    
+    updateProductsList();
+}
+
+function updateProductsList() {
+    const selectedCategories = Array.from(document.querySelectorAll('.category-filter:checked'))
+        .map(cb => cb.value);
+    
+    const productosContainer = document.getElementById('productosContainer');
+    productosContainer.innerHTML = '';
+    
+    if (selectedCategories.length === 0) {
+        // Si no hay categorías seleccionadas, mostrar todos los productos
+        Object.keys(productosPorCategoria).forEach(categoria => {
+            productosPorCategoria[categoria].forEach((producto, index) => {
+                const div = document.createElement('div');
+                div.className = 'form-check filter-checkbox';
+                div.innerHTML = `
+                    <input class="form-check-input product-filter" type="checkbox" 
+                           value="${producto}" id="prod_${categoria}_${index}">
+                    <label class="form-check-label" for="prod_${categoria}_${index}">
+                        ${producto}
+                    </label>
+                `;
+                productosContainer.appendChild(div);
+            });
+        });
+    } else {
+        // Mostrar solo productos de categorías seleccionadas
+        selectedCategories.forEach(categoria => {
+            if (productosPorCategoria[categoria]) {
+                productosPorCategoria[categoria].forEach((producto, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'form-check filter-checkbox';
+                    div.innerHTML = `
+                        <input class="form-check-input product-filter" type="checkbox" 
+                               value="${producto}" id="prod_${categoria}_${index}">
+                        <label class="form-check-label" for="prod_${categoria}_${index}">
+                            ${producto}
+                        </label>
+                    `;
+                    productosContainer.appendChild(div);
+                });
+            }
+        });
+    }
+}
+
+function updateCharts() {
+    const loadingElement = document.getElementById('chartsLoading');
+    const containerElement = document.getElementById('chartsContainer');
+    
+    loadingElement.style.display = 'block';
+    containerElement.style.display = 'none';
+    
+    // Obtener filtros
+    const filters = {
+        'categorias[]': Array.from(document.querySelectorAll('.category-filter:checked')).map(cb => cb.value),
+        'productos[]': Array.from(document.querySelectorAll('.product-filter:checked')).map(cb => cb.value),
+        'years[]': Array.from(document.querySelectorAll('.year-filter:checked')).map(cb => cb.value),
+        'months[]': Array.from(document.querySelectorAll('.month-filter:checked')).map(cb => cb.value),
+        'dias[]': Array.from(document.querySelectorAll('.day-filter:checked')).map(cb => cb.value)
+    };
+    
+    // Construir URL
+    const params = new URLSearchParams();
+    Object.entries(filters).forEach(([key, values]) => {
+        values.forEach(value => params.append(key, value));
+    });
+    
+    // Mostrar URL en consola para depuración
+    console.log(`Solicitando datos a: /api/data?${params.toString()}`);
+    
+    fetch(`/api/data?${params.toString()}`)
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { 
+                    throw new Error(err.error || `HTTP error! status: ${response.status}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            // Actualizar KPIs
+            const updateKPI = (id, value) => {
+                document.getElementById(id).textContent = value || '-';
+            };
+            
+            updateKPI('totalVentas', data.kpis?.total_ventas);
+            updateKPI('totalCantidad', data.kpis?.total_cantidad);
+            updateKPI('promedioTicket', data.kpis?.promedio_ticket);
+            updateKPI('productosUnicos', data.kpis?.productos_unicos);
+            
+            // Función para actualizar gráficos
+            const updatePlot = (elementId, graphData) => {
+                try {
+                    if (graphData) {
+                        const graph = JSON.parse(graphData);
+                        Plotly.newPlot(elementId, graph.data, graph.layout, {responsive: true});
+                    }
+                } catch (e) {
+                    console.error(`Error al renderizar gráfico ${elementId}:`, e);
+                }
+            };
+            
+            // Actualizar todos los gráficos
+            updatePlot('ventasCategoria', data.ventas_categoria);
+            updatePlot('topProductos', data.top_productos);
+            updatePlot('ventasMensuales', data.ventas_mensuales);
+            updatePlot('ventasDiaSemana', data.ventas_dia_semana);
+            updatePlot('cantidadVsValor', data.cantidad_vs_valor);
+            updatePlot('heatmapVentas', data.heatmap_ventas);
+            
+            loadingElement.style.display = 'none';
+            containerElement.style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Error completo:', error);
+            loadingElement.style.display = 'none';
+            
+            // Mostrar error al usuario
+            const errorMessage = error.message.includes('Internal Server Error') 
+                ? 'Error en el servidor. Por favor revisa los logs.' 
+                : error.message;
+            
+            alert('Error: ' + errorMessage);
+        });
+}
+</script>
+{% endblock %}
